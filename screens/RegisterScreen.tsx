@@ -3,14 +3,19 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
 } from "react-native";
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Input, Button, Text } from "@rneui/themed";
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }: any) => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [imageUrl, setImageUrl] = React.useState("");
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "Back to Login",
+    });
+  }, [navigation]);
 
   const register = () => {
     console.warn("Register");
