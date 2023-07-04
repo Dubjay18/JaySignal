@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import HomeScreeen from "./screens/HomeScreeen";
 
 const Stack = createStackNavigator();
 const globalScreenOptions = {
@@ -24,6 +25,7 @@ export default function App() {
           name='Register'
           component={RegisterScreen}
         />
+        <Stack.Screen name='Home' component={HomeScreeen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

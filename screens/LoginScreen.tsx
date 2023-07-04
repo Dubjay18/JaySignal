@@ -11,10 +11,26 @@ import {
   NavigationProp,
   ParamListBase,
 } from "@react-navigation/native";
+import { useEffect } from "react";
+import { auth } from "../firebase";
 
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(
+      (authUser) => {
+        if (authUser) {
+          navigation.replace("Home");
+        } else {
+          navigation.canGoBack() && navigation.popToTop();
+        }
+      }
+    );
+    return unsubscribe;
+  }, []);
+
   const signIn = () => {};
   return (
     <KeyboardAvoidingView

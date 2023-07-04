@@ -6,6 +6,8 @@ import {
 import React, { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Input, Button, Text } from "@rneui/themed";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 const RegisterScreen = ({ navigation }: any) => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -18,7 +20,22 @@ const RegisterScreen = ({ navigation }: any) => {
   }, [navigation]);
 
   const register = () => {
-    console.warn("Register");
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((authUser) => {
+        const user = authUser.user;
+        auth.updateCurrentUser({
+          ...user,
+          displayName: name,
+          photoURL:
+            imageUrl ||
+            "https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png",
+        });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorMessage);
+      });
   };
   return (
     <KeyboardAvoidingView
