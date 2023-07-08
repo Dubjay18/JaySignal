@@ -31,7 +31,9 @@ const LoginScreen = ({ navigation }: any) => {
     return unsubscribe;
   }, []);
 
-  const signIn = () => {};
+  const signIn = () => {
+    // auth.signInWithEmailAndPassword(r)
+  };
   return (
     <KeyboardAvoidingView
       behavior='padding'
