@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import React, {
   useLayoutEffect,
@@ -36,6 +37,9 @@ const HomeScreeen = ({ navigation }: any) => {
     });
   };
   useEffect(() => {
+    let isMounted = true;
+    console.log("mount");
+
     const fetchData = async () => {
       const chatsRef: CollectionReference<DocumentData> =
         collection(db, "chats");
@@ -43,18 +47,24 @@ const HomeScreeen = ({ navigation }: any) => {
       const chatsArray: DocumentData[] = [];
       const querySnapshot: QuerySnapshot<DocumentData> =
         await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        chatsArray.push({
-          id: doc.id,
-          data: doc.data(),
+      if (isMounted) {
+        querySnapshot.forEach((doc) => {
+          chatsArray.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+          console.log(doc.id, " => ", doc.data());
         });
-        console.log(doc.id, " => ", doc.data());
-      });
-      setChats(chatsArray);
+        setChats(chatsArray);
+      }
     };
 
     fetchData();
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [navigation]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -103,14 +113,33 @@ const HomeScreeen = ({ navigation }: any) => {
         </View>
       ),
     });
-  }, []);
+  }, [navigation]);
+  const enterChat = (id: string, chatName: string) => {
+    navigation.navigate("Chat", {
+      id,
+      chatName,
+    });
+  };
   return (
     <SafeAreaView>
-      <ScrollView>
-        <CustomListItem id='test' chatName='CChat' />
+      <ScrollView style={styles.container}>
+        {chats.map((chat, i: number) => (
+          <CustomListItem
+            key={i}
+            id={chat.id}
+            chatName={chat.data.chatName}
+            enterChat={enterChat}
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 export default HomeScreeen;
+
+const styles = StyleSheet.create({
+  container: {
+    height: "100%",
+  },
+});

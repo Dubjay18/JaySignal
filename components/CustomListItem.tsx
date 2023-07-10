@@ -5,15 +5,20 @@ import { ListItem, Avatar } from "react-native-elements";
 interface ICustomListItemProps {
   id: string;
   chatName: string;
-  enterChat?: () => void;
+  enterChat: (id: string, chatName: string) => void;
 }
 const CustomListItem = ({
   id,
   chatName,
   enterChat,
 }: ICustomListItemProps) => {
+  console.log(chatName);
+
   return (
-    <ListItem>
+    <ListItem
+      onPress={() => enterChat(id, chatName)}
+      key={id}
+      bottomDivider>
       <Avatar
         rounded
         source={{
@@ -22,13 +27,12 @@ const CustomListItem = ({
       />
       <ListItem.Content>
         <ListItem.Title style={{ fontWeight: "800" }}>
-          Test Chat
+          {chatName}
         </ListItem.Title>
         <ListItem.Subtitle
           numberOfLines={1}
           ellipsizeMode='tail'>
-          This is a test
-          chatsdddddddddddddddddddddddddddddddddddd
+          dddddddddddddddddddd
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
