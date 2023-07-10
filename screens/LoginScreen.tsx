@@ -13,6 +13,7 @@ import {
 } from "@react-navigation/native";
 import { useEffect } from "react";
 import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = React.useState("");
@@ -32,7 +33,9 @@ const LoginScreen = ({ navigation }: any) => {
   }, []);
 
   const signIn = () => {
-    // auth.signInWithEmailAndPassword(r)
+    signInWithEmailAndPassword(auth, email, password).catch(
+      (err) => alert(err)
+    );
   };
   return (
     <KeyboardAvoidingView
