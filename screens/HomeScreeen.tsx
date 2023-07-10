@@ -5,21 +5,57 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, {
+  useLayoutEffect,
+  useState,
+  useEffect,
+} from "react";
 import CustomListItem from "../components/CustomListItem";
 import { Avatar } from "react-native-elements";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import {
   AntDesign,
   SimpleLineIcons,
 } from "@expo/vector-icons";
+import {
+  CollectionReference,
+  DocumentData,
+  Query,
+  QuerySnapshot,
+  collection,
+  getDocs,
+  query,
+} from "firebase/firestore";
 
 const HomeScreeen = ({ navigation }: any) => {
+  const [chats, setChats] = useState<DocumentData[]>([]);
+
   const signOutUser = () => {
     auth.signOut().then(() => {
       navigation.replace("Login");
     });
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const chatsRef: CollectionReference<DocumentData> =
+        collection(db, "chats");
+      const q: Query<DocumentData> = query(chatsRef);
+      const chatsArray: DocumentData[] = [];
+      const querySnapshot: QuerySnapshot<DocumentData> =
+        await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        chatsArray.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+        console.log(doc.id, " => ", doc.data());
+      });
+      setChats(chatsArray);
+    };
+
+    fetchData();
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Signal",

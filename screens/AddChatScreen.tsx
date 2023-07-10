@@ -21,7 +21,7 @@ const AddChatScreen = ({ navigation }: any) => {
   const createChat = async () => {
     const chatsRef = collection(db, "chats");
     await addDoc(chatsRef, {
-      chatName: "input",
+      chatName: input,
     })
       .then(() => {
         navigation.goBack();
