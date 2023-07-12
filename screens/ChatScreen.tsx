@@ -160,14 +160,36 @@ const ChatScreen = ({ navigation, route }: any) => {
               {messages.map(({ id, data }) =>
                 data.email === auth.currentUser?.email ? (
                   <View key={id} style={styles.reciever}>
-                    <Avatar />
+                    <Avatar
+                      containerStyle={{
+                        position: "absolute",
+                        bottom: -15,
+                        right: -5,
+                      }}
+                      rounded
+                      source={{
+                        uri: data.photoURL,
+                      }}
+                      size={30}
+                    />
                     <Text style={styles.recieverText}>
                       {data.message}
                     </Text>
                   </View>
                 ) : (
                   <View style={styles.sender}>
-                    <Avatar />
+                    <Avatar
+                      containerStyle={{
+                        position: "absolute",
+                        bottom: -15,
+                        right: -5,
+                      }}
+                      rounded
+                      source={{
+                        uri: data.photoURL,
+                      }}
+                      size={30}
+                    />
                     <Text style={styles.senderText}>
                       {data.message}
                     </Text>
