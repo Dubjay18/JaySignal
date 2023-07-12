@@ -7,7 +7,10 @@ import React, { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Input, Button, Text } from "@rneui/themed";
 import { auth } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 const RegisterScreen = ({ navigation }: any) => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -18,25 +21,51 @@ const RegisterScreen = ({ navigation }: any) => {
       headerBackTitle: "Back to Login",
     });
   }, [navigation]);
+  const register = async () => {
+    const { user } = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-  const register = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((authUser) => {
-        const user = authUser.user;
-        auth.updateCurrentUser({
-          ...user,
-          displayName: name,
-          photoURL:
-            imageUrl ||
-            "https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png",
-        });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorMessage);
-      });
+    await updateProfile(user, {
+      displayName: name,
+      photoURL:
+        imageUrl ||
+        "https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png",
+    });
   };
+  // const register = () => {
+  //   createUserWithEmailAndPassword(auth, email, password)
+  //     .then((authUser) => {
+  //       const user = authUser.user;
+  //       updateProfile(user, {
+  //         displayName: name,
+  //         photoURL:
+  //           imageUrl ||
+  //           "https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png",
+  //       })
+  //         .then((res) => {
+  //           console.log(res);
+
+  //           alert("Profile updated");
+  //           // Profile updated!
+  //           // ...
+  //         })
+  //         .catch((error) => {
+  //           alert(error);
+  //           console.log(error);
+
+  //           // An error occurred
+  //           // ...
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       alert(errorMessage);
+  //     });
+  // };
   return (
     <KeyboardAvoidingView
       behavior='padding'

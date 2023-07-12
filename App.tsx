@@ -19,7 +19,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName='Home'
+        initialRouteName='Login'
         screenOptions={globalScreenOptions}>
         <Stack.Screen
           name='Login'

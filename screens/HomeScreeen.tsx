@@ -27,6 +27,7 @@ import {
   getDocs,
   query,
 } from "firebase/firestore";
+import { User, updateProfile } from "firebase/auth";
 
 const HomeScreeen = ({ navigation }: any) => {
   const [chats, setChats] = useState<DocumentData[]>([]);
@@ -38,7 +39,7 @@ const HomeScreeen = ({ navigation }: any) => {
   };
   useEffect(() => {
     let isMounted = true;
-    console.log("mount");
+    // console.log("mount", auth?.currentUser);
 
     const fetchData = async () => {
       const chatsRef: CollectionReference<DocumentData> =
@@ -65,7 +66,21 @@ const HomeScreeen = ({ navigation }: any) => {
       isMounted = false;
     };
   }, [navigation]);
-
+  const funcUp = () => {
+    updateProfile(auth.currentUser as User, {
+      displayName: "Jaytest",
+      photoURL:
+        "https://www.gamespot.com/a/uploads/screen_kubrick/1603/16030002/4111613-mha-01.png",
+    })
+      .then(() => {
+        // Profile updated!
+        // ...
+      })
+      .catch((error) => {
+        // An error occurred
+        // ...
+      });
+  };
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Signal",
