@@ -156,7 +156,8 @@ const ChatScreen = ({ navigation, route }: any) => {
         <TouchableWithoutFeedback
           onPress={Keyboard.dismiss}>
           <>
-            <ScrollView>
+            <ScrollView
+              contentContainerStyle={{ paddingTop: 15 }}>
               {messages.map(({ id, data }) =>
                 data.email === auth.currentUser?.email ? (
                   <View key={id} style={styles.reciever}>
@@ -192,6 +193,9 @@ const ChatScreen = ({ navigation, route }: any) => {
                     />
                     <Text style={styles.senderText}>
                       {data.message}
+                    </Text>
+                    <Text style={styles.senderName}>
+                      {data.displayName}
                     </Text>
                   </View>
                 )
@@ -246,8 +250,18 @@ const styles = StyleSheet.create({
     color: "grey",
     borderRadius: 30,
   },
-  senderText: {},
-  recieverText: {},
+  senderText: {
+    color: "white",
+    fontWeight: "500",
+    marginLeft: 10,
+    marginBottom: 15,
+  },
+  recieverText: {
+    color: "black",
+    fontWeight: "500",
+    marginLeft: 10,
+    marginBottom: 15,
+  },
   reciever: {
     padding: 15,
     backgroundColor: "#ececec",
@@ -267,5 +281,11 @@ const styles = StyleSheet.create({
 
     maxWidth: "80%",
     position: "relative",
+  },
+  senderName: {
+    left: 10,
+    paddingRight: 10,
+    fontSize: 10,
+    color: "#fff",
   },
 });
