@@ -22,14 +22,22 @@ import { StatusBar } from "expo-status-bar";
 import {
   CollectionReference,
   DocumentData,
+  Query,
+  QuerySnapshot,
   addDoc,
   collection,
+  getDocs,
+  orderBy,
+  query,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { serverTimestamp } from "firebase/firestore";
 
 const ChatScreen = ({ navigation, route }: any) => {
   const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<DocumentData[]>(
+    []
+  );
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Chat",
@@ -107,6 +115,34 @@ const ChatScreen = ({ navigation, route }: any) => {
 
     setInput("");
   };
+  useLayoutEffect(() => {
+    async function fetchData() {
+      const messagesRef: CollectionReference<DocumentData> =
+        collection(
+          db,
+          "chats",
+          route.params.id,
+          "messages"
+        );
+      const messagesArray: DocumentData[] = [];
+      const q: Query<DocumentData> = query(
+        messagesRef,
+        orderBy("timestamp", "desc")
+      );
+      const querySnapshot: QuerySnapshot<DocumentData> =
+        await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        messagesArray.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+        console.log(doc.id, " => ", doc.data());
+      });
+      setMessages(messagesArray);
+    }
+
+    fetchData();
+  }, [route]);
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white" }}>
@@ -120,7 +156,25 @@ const ChatScreen = ({ navigation, route }: any) => {
         <TouchableWithoutFeedback
           onPress={Keyboard.dismiss}>
           <>
-            <ScrollView></ScrollView>
+            <ScrollView>
+              {messages.map(({ id, data }) =>
+                data.email === auth.currentUser?.email ? (
+                  <View key={id} style={styles.reciever}>
+                    <Avatar />
+                    <Text style={styles.recieverText}>
+                      {data.message}
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={styles.sender}>
+                    <Avatar />
+                    <Text style={styles.senderText}>
+                      {data.message}
+                    </Text>
+                  </View>
+                )
+              )}
+            </ScrollView>
             <View style={styles.footer}>
               <TextInput
                 placeholder='Signal Message'
@@ -170,4 +224,17 @@ const styles = StyleSheet.create({
     color: "grey",
     borderRadius: 30,
   },
+  senderText: {},
+  recieverText: {},
+  reciever: {
+    padding: 15,
+    backgroundColor: "#ececec",
+    alignSelf: "flex-end",
+    borderRadius: 20,
+    marginRight: 15,
+    marginBottom: 20,
+    maxWidth: "80%",
+    position: "relative",
+  },
+  sender: {},
 });
