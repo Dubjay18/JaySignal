@@ -74,6 +74,7 @@ const LoginScreen = ({ navigation }: any) => {
         title='Login'
         onPress={signIn}
         loading={loading}
+        disabled={loading}
       />
       <Button
         containerStyle={styles.button}

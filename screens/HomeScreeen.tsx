@@ -29,7 +29,7 @@ import {
 } from "firebase/firestore";
 import { User, updateProfile } from "firebase/auth";
 
-const HomeScreeen = ({ navigation }: any) => {
+const HomeScreeen = ({ navigation, route }: any) => {
   const [chats, setChats] = useState<DocumentData[]>([]);
 
   const signOutUser = () => {
@@ -128,7 +128,7 @@ const HomeScreeen = ({ navigation }: any) => {
         </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, route]);
   const enterChat = (id: string, chatName: string) => {
     navigation.navigate("Chat", {
       id,
