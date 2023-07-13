@@ -130,7 +130,7 @@ const ChatScreen = ({ navigation, route }: any) => {
     const querySnapshot: QuerySnapshot<DocumentData> =
       await getDocs(q);
     querySnapshot.forEach((doc) => {
-      messagesArray.push({
+      messagesArray.unshift({
         id: doc.id,
         data: doc.data(),
       });

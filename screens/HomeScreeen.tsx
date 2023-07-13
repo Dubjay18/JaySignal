@@ -68,9 +68,9 @@ const HomeScreeen = ({ navigation, route }: any) => {
   }, [navigation]);
   const funcUp = () => {
     updateProfile(auth.currentUser as User, {
-      displayName: "Jaytest",
+      displayName: "Jay",
       photoURL:
-        "https://www.gamespot.com/a/uploads/screen_kubrick/1603/16030002/4111613-mha-01.png",
+        "https://cdn.oneesports.gg/cdn-data/2023/04/Anime_DemonSlayer_Muzan_3.jpg",
     })
       .then(() => {
         // Profile updated!
