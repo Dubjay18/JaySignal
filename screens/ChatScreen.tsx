@@ -52,7 +52,9 @@ const ChatScreen = ({ navigation, route }: any) => {
           <Avatar
             rounded
             source={{
-              uri: "https://via.placeholder.com/150x150.png?text=Profile+Image",
+              uri:
+                messages[0]?.data?.photoURL ||
+                "https://via.placeholder.com/150x150.png?text=Profile+Image",
             }}
           />
           <Text
@@ -98,7 +100,7 @@ const ChatScreen = ({ navigation, route }: any) => {
         </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, messages]);
   const sendMessage = async () => {
     Keyboard.dismiss();
 
@@ -111,36 +113,32 @@ const ChatScreen = ({ navigation, route }: any) => {
         email: auth.currentUser?.email,
         photoURL: auth.currentUser?.photoURL,
       }
-    );
+    ).then(() => {
+      fetchData();
+    });
 
     setInput("");
   };
-  useLayoutEffect(() => {
-    async function fetchData() {
-      const messagesRef: CollectionReference<DocumentData> =
-        collection(
-          db,
-          "chats",
-          route.params.id,
-          "messages"
-        );
-      const messagesArray: DocumentData[] = [];
-      const q: Query<DocumentData> = query(
-        messagesRef,
-        orderBy("timestamp", "desc")
-      );
-      const querySnapshot: QuerySnapshot<DocumentData> =
-        await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        messagesArray.push({
-          id: doc.id,
-          data: doc.data(),
-        });
-        // console.log(doc.id, " => ", doc.data());
+  async function fetchData() {
+    const messagesRef: CollectionReference<DocumentData> =
+      collection(db, "chats", route.params.id, "messages");
+    const messagesArray: DocumentData[] = [];
+    const q: Query<DocumentData> = query(
+      messagesRef,
+      orderBy("timestamp", "desc")
+    );
+    const querySnapshot: QuerySnapshot<DocumentData> =
+      await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      messagesArray.push({
+        id: doc.id,
+        data: doc.data(),
       });
-      setMessages(messagesArray);
-    }
-
+      // console.log(doc.id, " => ", doc.data());
+    });
+    setMessages(messagesArray);
+  }
+  useLayoutEffect(() => {
     fetchData();
   }, [route]);
   return (
