@@ -18,6 +18,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(
@@ -33,9 +34,14 @@ const LoginScreen = ({ navigation }: any) => {
   }, []);
 
   const signIn = () => {
+    setLoading(true);
     signInWithEmailAndPassword(auth, email, password).catch(
-      (err) => alert(err)
+      (err) => {
+        alert(err);
+        setLoading(false);
+      }
     );
+    setLoading(false);
   };
   return (
     <KeyboardAvoidingView
@@ -67,6 +73,7 @@ const LoginScreen = ({ navigation }: any) => {
         containerStyle={styles.button}
         title='Login'
         onPress={signIn}
+        loading={loading}
       />
       <Button
         containerStyle={styles.button}

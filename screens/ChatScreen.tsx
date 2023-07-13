@@ -136,7 +136,7 @@ const ChatScreen = ({ navigation, route }: any) => {
           id: doc.id,
           data: doc.data(),
         });
-        console.log(doc.id, " => ", doc.data());
+        // console.log(doc.id, " => ", doc.data());
       });
       setMessages(messagesArray);
     }
@@ -178,7 +178,7 @@ const ChatScreen = ({ navigation, route }: any) => {
                     </Text>
                   </View>
                 ) : (
-                  <View style={styles.sender}>
+                  <View key={id} style={styles.sender}>
                     <Avatar
                       containerStyle={{
                         position: "absolute",
